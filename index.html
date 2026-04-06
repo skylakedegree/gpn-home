@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPN24.home – Gulasch at the Scale of Living Room</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --green: #00ff41;
+    --orange: #ff6b00;
+    --dark: #080c08;
+    --darker: #040604;
+    --mid: #0d160d;
+    --dim: #1a2a1a;
+    --text: #b8d4b8;
+    --accent: #ff6b00;
+    --red: #ff2244;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--darker);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,255,65,0.2);
+    padding-bottom: 12px;
+    margin-bottom: 40px;
+    font-size: 11px;
+    color: rgba(0,255,65,0.45);
+    letter-spacing: 0.1em;
+  }
+  .topbar .blink {
+    color: var(--green);
+    animation: blink 1.2s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 48px 0 36px;
+    position: relative;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s ease forwards;
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(36px, 9vw, 82px);
+    line-height: 0.95;
+    color: var(--green);
+    text-shadow: 0 0 30px rgba(0,255,65,0.5), 0 0 80px rgba(0,255,65,0.2);
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.25s ease forwards;
+  }
+
+  .logo span {
+    color: var(--orange);
+    text-shadow: 0 0 30px rgba(255,107,0,0.6);
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(11px, 2.5vw, 14px);
+    color: rgba(0,255,65,0.55);
+    letter-spacing: 0.15em;
+    margin-top: 14px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* decorative line */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 36px 0;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.55s ease forwards;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,255,65,0.35), transparent);
+  }
+  .divider-icon { color: var(--orange); font-size: 18px; }
+
+  /* ── INVITE CARD ── */
+  .card {
+    background: var(--mid);
+    border: 1px solid rgba(0,255,65,0.18);
+    border-radius: 2px;
+    padding: 36px 40px;
+    position: relative;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.65s ease forwards;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--orange), var(--green), transparent);
+  }
+
+  .card-header {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .invite-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .invite-text strong {
+    color: var(--green);
+  }
+  .invite-text .name {
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s ease forwards;
+  }
+
+  .info-block {
+    background: var(--dim);
+    border: 1px solid rgba(0,255,65,0.12);
+    border-left: 3px solid var(--orange);
+    padding: 20px 22px;
+  }
+
+  .info-block .label {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    color: rgba(0,255,65,0.45);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .info-block .value {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .info-block .sub {
+    font-size: 11px;
+    color: rgba(184,212,184,0.55);
+    margin-top: 4px;
+  }
+
+  /* ── AGENDA ── */
+  .agenda {
+    margin-top: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.95s ease forwards;
+  }
+
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(0,255,65,0.15);
+  }
+
+  .agenda-list {
+    list-style: none;
+  }
+
+  .agenda-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,255,65,0.07);
+    font-size: 13px;
+  }
+  .agenda-list li:last-child { border-bottom: none; }
+
+  .agenda-list .time {
+    color: var(--orange);
+    font-size: 11px;
+    min-width: 52px;
+    letter-spacing: 0.05em;
+  }
+
+  .agenda-list .item {
+    color: var(--text);
+  }
+  .agenda-list .item em {
+    color: rgba(184,212,184,0.45);
+    font-style: normal;
+    font-size: 11px;
+  }
+
+  /* ── RSVP ── */
+  .rsvp-section {
+    margin-top: 24px;
+    background: var(--mid);
+    border: 1px solid rgba(0,255,65,0.18);
+    padding: 28px 40px;
+    text-align: center;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s 1.1s ease forwards;
+  }
+  .rsvp-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+
+  .rsvp-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+
+  .rsvp-sub {
+    font-size: 12px;
+    color: rgba(184,212,184,0.5);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .rsvp-btn {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 13px 36px;
+    background: transparent;
+    border: 2px solid var(--orange);
+    color: var(--orange);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .rsvp-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--orange);
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+    z-index: -1;
+  }
+  .rsvp-btn:hover { color: var(--darker); }
+  .rsvp-btn:hover::before { transform: translateX(0); }
+
+  /* ── TAGS ── */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.7s 1.25s ease forwards;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 5px 12px;
+    border: 1px solid rgba(0,255,65,0.2);
+    color: rgba(0,255,65,0.5);
+    border-radius: 1px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 48px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(0,255,65,0.2);
+    opacity: 0;
+    animation: fadeUp 0.6s 1.35s ease forwards;
+  }
+  .footer a {
+    color: rgba(0,255,65,0.35);
+    text-decoration: none;
+  }
+
+  /* corner decorations */
+  .corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--orange);
+    border-style: solid;
+  }
+  .corner-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+  .corner-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+  /* glitch effect on logo hover */
+  .logo:hover {
+    animation: glitch 0.3s ease;
+  }
+  @keyframes glitch {
+    0%   { text-shadow: 0 0 30px rgba(0,255,65,0.5); transform: skewX(0deg); }
+    20%  { text-shadow: -3px 0 rgba(255,34,68,0.8), 3px 0 rgba(0,255,65,0.8); transform: skewX(-2deg); }
+    40%  { text-shadow: 3px 0 rgba(255,34,68,0.8), -3px 0 rgba(0,255,65,0.8); transform: skewX(2deg); }
+    60%  { text-shadow: -2px 0 rgba(255,107,0,0.8); transform: skewX(-1deg); }
+    100% { text-shadow: 0 0 30px rgba(0,255,65,0.5); transform: skewX(0deg); }
+  }
+
+  @media (max-width: 560px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .card, .rsvp-section { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <span>GPN24.home // HEIMNETZ-EDITION</span>
+    <span><span class="blink">▮</span> EINLADUNG_v1.0</span>
+    <span>TRANSMISSION AKTIV</span>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="hero-label">// Gulasch at the Scale of Living Room</p>
+    <h1 class="logo">GPN<span>24</span>.home</h1>
+    <p class="subtitle">– eine inoffizielle, offizielle, feine kleine Heimausgabe –</p>
+  </header>
+
+  <div class="divider">
+    <span class="divider-icon">◈</span>
+  </div>
+
+  <!-- INVITE CARD -->
+  <div class="card">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <p class="card-header">// eingehende transmission</p>
+
+    <div class="invite-text">
+      <p>Werte Mitglieder der Hacker-Community,</p><br>
+      <p>
+        da die Tickets für die <strong>GPN24</strong> restlos ausverkauft sind
+        und die Warteliste eine eigene Veranstaltung werden könnte –
+        lade ich euch herzlich ein zur:
+      </p><br>
+      <p class="name">&gt; GPN24.home – Gulasch Programmiernacht @ Zuhause &lt;</p><br>
+      <p>
+        Vier Tage habt ihr erwartet: Hacken, Vorträge, Gulasch, Mate, Tschunk
+        und Spaß am Gerät. Ich biete euch: <strong>Einen Abend</strong> davon,
+        aber dafür mit <strong>100% mehr Sofa</strong>, hausgemachtem Gulasch
+        und keiner Warteschlange an der Garderobe.
+      </p><br>
+      <p>
+        Bringt eure Projekte, eure Laptops, eure Ideen – und euren Hunger.
+        Das System ist vorbereitet. Der Stack ist bereit. Die Töpfe auch.
+      </p>
+    </div>
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="info-grid">
+    <div class="info-block">
+      <div class="label">// datum</div>
+      <div class="value">16.05.2025</div>
+      <div class="sub">Nachmittags, solange ihr wollt</div>
+    </div>
+    <div class="info-block">
+      <div class="label">// uhrzeit</div>
+      <div class="value">16:30 Uhr</div>
+      <div class="sub">Türen öffnen, Gulasch kocht</div>
+    </div>
+    <div class="info-block">
+      <div class="label">// standort</div>
+      <div class="value">Wohnzimmer</div>
+      <div class="sub">Bekannte Adresse, Offenbach</div>
+    </div>
+    <div class="info-block">
+      <div class="label">// kapazität</div>
+      <div class="value">Limitiert</div>
+      <div class="sub">Anders als die echte GPN: Plätze sind knapp</div>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="agenda">
+    <p class="section-title">// programm</p>
+    <ul class="agenda-list">
+      <li>
+        <span class="time">16:30</span>
+        <span class="item">Einlass</span>
+      </li>
+      <li>
+        <span class="time">18:00</span>
+        <span class="item">Gulasch-Deployment <em>// Töpfe werden geöffnet</em></span>
+      </li>
+      <li>
+        <span class="time">~19:00</span>
+        <span class="item">Projekte &amp; Demos <em>// zeigt, was ihr baut</em></span>
+      </li>
+      <li>
+        <span class="time">~20:00</span>
+        <span class="item">Lightning Talks <em>// 5 Minuten, freies Thema, keine Ausrede</em></span>
+      </li>
+      <li>
+        <span class="time">~21:30</span>
+        <span class="item">Freies Hacken &amp; Tschunk-Ritual <em>// nach eigenem Takt</em></span>
+      </li>
+      <li>
+        <span class="time">∞</span>
+        <span class="item">Until kernel panic <em>// oder bis alle schlafen</em></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider" style="animation-delay:1s;">
+    <span class="divider-icon">◈</span>
+  </div>
+
+  <!-- RSVP -->
+  <div class="rsvp-section">
+    <p class="rsvp-title">// RSVP erforderlich</p>
+    <p class="rsvp-sub">
+      Gulasch hat eine feste Kapazität.<br>
+      Meldet euch rechtzeitig an, damit der Topf groß genug wird.
+    </p>
+    <a class="rsvp-btn" href="mailto:gpn-home.papyrus765@passinbox.com?subject=GPN24.home%20RSVP">
+      ▶ Ich bin dabei
+    </a>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">#gulasch</span>
+    <span class="tag">#hacking</span>
+    <span class="tag">#mate</span>
+    <span class="tag">#tschunk</span>
+    <span class="tag">#gpn24</span>
+    <span class="tag">#wohnzimmerchaos</span>
+    <span class="tag">#kein_schlaf</span>
+    <span class="tag">#entropia</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>GPN24.home – Eine inoffizielle Veranstaltung | Inspiriert von <a href="https://entropia.de/GPN24">GPN24</a> @ Entropia e.V., CCC Karlsruhe</p>
+    <p style="margin-top:8px;">„Gulasch at the Scale of Chaos" – wir skalieren ihn auf Wohnzimmergröße.</p>
+  </footer>
+
+</div>
+</body>
+</html>
