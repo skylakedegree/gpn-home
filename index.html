@@ -231,6 +231,36 @@
     margin-top: 4px;
   }
 
+  /* ── NOTICE ── */
+  .notice-box {
+    margin-top: 20px;
+    background: linear-gradient(180deg, rgba(255,107,0,0.08), rgba(13,22,13,0.95));
+    border: 1px solid rgba(255,107,0,0.22);
+    border-left: 3px solid var(--orange);
+    padding: 20px 22px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.88s ease forwards;
+  }
+
+  .notice-label {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    color: rgba(255,107,0,0.72);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .notice-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .notice-text strong {
+    color: var(--orange);
+  }
+
   /* ── AGENDA ── */
   .agenda {
     margin-top: 24px;
@@ -486,6 +516,16 @@
       <div class="label">// kapazität</div>
       <div class="value">Limitiert</div>
       <div class="sub">Anders als die echte GPN: Plätze sind knapp</div>
+    </div>
+  </div>
+
+  <div class="notice-box">
+    <div class="notice-label">// hinweis zum provisioning</div>
+    <div class="notice-text">
+      Das Gulasch läuft hier als Home-Edition und wird aus privater Infrastruktur
+      deployed. Wenn ihr mögt, beteiligt euch gern ein wenig an
+      <strong>Unkosten oder Zutaten</strong> – völlig entspannt, ohne Pflicht und
+      einfach so, wie es für euch passt.
     </div>
   </div>
 
